@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
-use App\Http\Resources\TaskCollection;
-use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\TaskResource;
+use Spatie\QueryBuilder\QueryBuilder;
+use App\Http\Resources\TaskCollection;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        return new TaskCollection(Task::all());
+        $tasks = QueryBuilder::for(Task::class)
+                            ->allowedFilters('is_done')
+                            ->defaultSort('-created_at')
+                            ->allowedSorts(['title', 'is_done', 'created_at'])
+                            ->paginate();
+
+        return new TaskCollection($tasks);
     }
 
     public function show(Request $request, Task $task)
