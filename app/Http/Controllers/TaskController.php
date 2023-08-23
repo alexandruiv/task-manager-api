@@ -10,6 +10,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 use App\Http\Resources\TaskCollection;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -33,7 +34,7 @@ class TaskController extends Controller
     {
         $validated = $request->validated();
 
-        $task = Task::create($validated);
+        $task = Auth::user()->tasks()->create($validated);
 
         return new TaskResource($task);
     }
