@@ -13,7 +13,7 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->memberships->contains($project);
+        return true;
     }
 
     /**
