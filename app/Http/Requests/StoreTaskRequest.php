@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTaskRequest extends FormRequest
@@ -22,7 +24,11 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|max:255'
+            'title' => 'required|max:255',
+            'project_id' => [
+                'nullable',
+                Rule::in(Auth::user()->memberships->pluck('id')),
+            ],
         ];
     }
 }

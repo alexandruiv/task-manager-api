@@ -14,13 +14,18 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Task::class, 'task');
+    }
+
     public function index(Request $request)
     {
         $tasks = QueryBuilder::for(Task::class)
-                            ->allowedFilters('is_done')
-                            ->defaultSort('-created_at')
-                            ->allowedSorts(['title', 'is_done', 'created_at'])
-                            ->paginate();
+            ->allowedFilters('is_done')
+            ->defaultSort('-created_at')
+            ->allowedSorts(['title', 'is_done', 'created_at'])
+            ->paginate();
 
         return new TaskCollection($tasks);
     }
@@ -48,7 +53,8 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    public function destroy(Request $request, Task $task) {
+    public function destroy(Request $request, Task $task)
+    {
         $task->delete();
 
         return response()->noContent();
