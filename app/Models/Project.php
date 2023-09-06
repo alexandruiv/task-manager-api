@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -33,6 +34,11 @@ class Project extends Model
         return $this->belongsToMany(User::class, Member::class);
     }
 
+    public function comments() : MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+    
     protected static function booted(): void
     {
         static::addGlobalScope('member', function(Builder $builder) {
